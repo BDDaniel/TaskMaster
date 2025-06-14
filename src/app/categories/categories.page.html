@@ -1,0 +1,66 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Categorías</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Categorías</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <br />
+
+  <div class="input-container">
+    <ion-input class="input-search" fill="outline" style="width: 80%; margin: 0" placeholder="Buscar..."
+      [value]="search" (ionInput)="handleSearch($event)">
+      <ion-icon slot="end" name="search-outline" style="font-size: 24px;"></ion-icon>
+    </ion-input>
+
+    @if (allowedActions.add) {
+    <ion-button id="category-add-form" fill="outline" color="dark" style="height: 2.5em; width: 2.5em;"
+      (click)="clearForm('add')">
+      <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+    </ion-button>
+    }
+  </div>
+
+  <br />
+
+  <!-- Estado vacío -->
+  @if (categoriesFiltered.length === 0) {
+  <div class="empty-container">
+    <ion-icon name="alert-circle-outline" style="font-size: 64px; color: #4d8dff;width: auto;"></ion-icon>
+    <ion-label>
+      @if (search) {
+      No hay coincidencias con el filtro aplicado.<br />
+      ¡Intenta ajustar tu búsqueda!
+      } @else {
+      Aún no hay categorías.<br />
+      ¡Agrega algunas para empezar!
+      }
+    </ion-label>
+  </div>
+  }
+
+  <!-- Lista de categorías -->
+  @for (category of categoriesFiltered; track category) {
+  <ion-card class="card-container" (click)="openCategoryActionSheet(category)">
+    <ion-card-header class="content-wrap">
+      <ion-card-title>{{ category }}</ion-card-title>
+    </ion-card-header>
+  </ion-card>
+  }
+
+  <!-- Action Sheet -->
+  @if (allowedActions.edit || allowedActions.delete) {
+  <ion-action-sheet [isOpen]="isOpenActionSheet" (didDismiss)="closeCategoryActionSheet()"
+    [buttons]="actionSheetButtons"></ion-action-sheet>
+  }
+
+  <!-- Alerta de creación -->
+  <ion-alert trigger="category-add-form" header="Crear categoría" [backdropDismiss]="false" [buttons]="alertButtons"
+    [inputs]="alertInputs"></ion-alert>
+</ion-content>

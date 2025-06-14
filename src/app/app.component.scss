@@ -1,0 +1,35 @@
+.input-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.ios .input-search {
+    border: 1px solid;
+    border-radius: 1em;
+    min-height: 2.5em;
+    width: 90%;
+    margin: 0 auto;
+    padding: 0 12px !important;
+}
+
+.md .input-search {
+    min-height: 2.5em;
+    width: 90%;
+    margin: 0 auto;
+    --border-color: white;
+    --border-width: 1px;
+}
+
+.empty-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    width: 90%;
+    height: 80%;
+    margin: 0 auto;
+    gap: 1rem;
+    line-height: 1.5rem;
+}

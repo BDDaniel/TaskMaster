@@ -1,0 +1,103 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Tareas
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Tareas</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <br />
+
+  <div class="input-container">
+    <ion-input (ionInput)="handleSearch($event)" fill="outline" class="input-search" placeholder="Buscar..."
+      style="width: 80%;margin: 0;">
+      <ion-icon name="search-outline" style="font-size: 24px;" slot="end"></ion-icon>
+    </ion-input>
+    @if (allowedActions.add) {
+    <ion-button (click)="clearForm('add')" id="task-add-form" fill="outline" color="dark"
+      style="height: 2.5em;width: 2.5em;">
+      <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+    </ion-button>
+    }
+  </div>
+
+  <br />
+
+  <!-- Estado vacío -->
+  @if (tasksFiltered.length === 0) {
+  <div class="empty-container">
+    <ion-icon name="alert-circle-outline" style="font-size: 64px; color: #4d8dff;width: auto;"></ion-icon>
+    <ion-label>
+      @if (search) {
+      No hay coincidencias con el filtro aplicado.<br />
+      ¡Intenta ajustar tu búsqueda!
+      } @else {
+      Aún no hay tareas.<br />
+      ¡Agrega algunas para empezar!
+      }
+    </ion-label>
+  </div>
+  }
+
+  <!-- Lista de tareas -->
+  @for (task of tasksFiltered; track task.category + "/" + (task.name.replace(" ", "_"))) {
+  <ion-card class="card-container" (click)="openTaskActionSheet(task)">
+    <ion-card-header class="content-wrap">
+      <ion-card-title>{{task.name}}</ion-card-title>
+      <ion-card-subtitle>{{task.category}}</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content class="content-wrap">
+      {{task.description}}
+    </ion-card-content>
+  </ion-card>
+  }
+
+  <!-- Action Sheet -->
+  @if (allowedActions.edit || allowedActions.delete) {
+  <ion-action-sheet [isOpen]="isOpenActionSheet" (didDismiss)="closeTaskActionSheet()"
+    [buttons]="actionSheetButtons"></ion-action-sheet>
+  }
+
+  <ion-alert trigger="task-add-form" header="Crear tarea" [backdropDismiss]="false" [buttons]="alertButtons"
+    [inputs]="alertInputs" />
+
+  <ion-alert trigger="task-edit-form" header="Editar tarea" [backdropDismiss]="false" [buttons]="alertButtonsEdit"
+    [inputs]="alertInputsEdit" />
+
+  <ion-popover trigger="add-task-category" triggerAction="click" [dismissOnSelect]="true" [showBackdrop]="false"
+    size="cover">
+    <ng-template>
+      <ion-content>
+        <ion-list style="max-height: 10rem;overflow-y: auto;">
+          @for (category of categories; track category) {
+          <ion-item [button]="true" [detail]="false"
+            (click)="loadSelectCategory(category, 'add')">{{category}}</ion-item>
+          }
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
+
+  <ion-popover trigger="edit-task-category" triggerAction="click" #editDropdownCategory [dismissOnSelect]="true"
+    [showBackdrop]="false" size="cover">
+    <ng-template>
+      <ion-content>
+        <ion-list style="max-height: 10rem;overflow-y: auto;">
+          @for (category of categories; track category) {
+          <ion-item [button]="true" [detail]="false"
+            (click)="loadSelectCategory(category, 'edit')">{{category}}</ion-item>
+          }
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
+
+</ion-content>

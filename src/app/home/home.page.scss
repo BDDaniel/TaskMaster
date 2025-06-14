@@ -1,0 +1,30 @@
+.title-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-title {
+    position: relative;
+    top: 4px;
+}
+
+.card-container {
+    display: flex;
+    align-items: center;
+}
+
+.content-wrap {
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+}
+
+ion-checkbox {
+    margin-left: 1em;
+    width: -webkit-fill-available;
+    
+    &.checkbox-checked {
+        text-decoration: line-through;
+    }
+}
