@@ -1,5 +1,5 @@
 {
   "name": "TaskMaster",
-  "integrations": {},
+  "integrations": { "capacitor": { "enabled": true } },
   "type": "angular-standalone"
 }
