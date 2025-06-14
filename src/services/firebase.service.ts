@@ -22,10 +22,10 @@ export class FirebaseService {
         this.analytics = getAnalytics(this.app);
         this.remoteConfig = getRemoteConfig(this.app);
 
-        // Configuración opcional para desarrollo
         this.remoteConfig.settings = {
             fetchTimeoutMillis: 60000, //1 minuto
-            minimumFetchIntervalMillis: 3600000, // 1 hora
+            // minimumFetchIntervalMillis: 3600000, // 1 hora
+            minimumFetchIntervalMillis: 0, // modo de desarrollo
         };
 
         this.remoteConfig.defaultConfig = {
