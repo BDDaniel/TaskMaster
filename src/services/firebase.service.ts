@@ -9,14 +9,31 @@ import {
 } from 'firebase/remote-config';
 import { environment } from '../environments/environment';
 
+/**
+ * Servicio para manejar la integración con Firebase.
+ * Proporciona funcionalidades para analytics y configuración remota.
+ * 
+ * @class FirebaseService
+ * @description Gestiona la inicialización y operaciones de Firebase en la aplicación.
+ */
 @Injectable({
     providedIn: 'root',
 })
 export class FirebaseService {
+    /** Instancia de la aplicación Firebase */
     public app: FirebaseApp;
+    /** Instancia de Analytics de Firebase */
     public analytics: Analytics;
+    /** Instancia de Remote Config de Firebase */
     public remoteConfig: RemoteConfig;
 
+    /**
+     * Inicializa el servicio de Firebase.
+     * Configura la aplicación, analytics y remote config con valores por defecto.
+     * 
+     * @constructor
+     * @throws {Error} Si hay un error al inicializar Firebase
+     */
     constructor() {
         this.app = initializeApp(environment.firebase);
         this.analytics = getAnalytics(this.app);
@@ -42,7 +59,13 @@ export class FirebaseService {
         };
     }
 
-    // Método para obtener un valor remoto (después de fetchAndActivate)
+    /**
+     * Obtiene un valor de la configuración remota.
+     * 
+     * @param {string} key - La clave del valor a obtener
+     * @returns {Promise<string | number | boolean | null>} Una promesa que se resuelve con el valor obtenido
+     * @throws {Error} Si hay un error al obtener el valor remoto
+     */
     public async getRemoteValue(key: string): Promise<string | number | boolean | null> {
         try {
             await fetchAndActivate(this.remoteConfig);
@@ -55,6 +78,14 @@ export class FirebaseService {
         }
     }
 
+    /**
+     * Obtiene un valor JSON de la configuración remota.
+     * 
+     * @template T - El tipo de dato esperado
+     * @param {string} key - La clave del valor JSON a obtener
+     * @returns {Promise<T | null>} Una promesa que se resuelve con el objeto JSON parseado
+     * @throws {Error} Si hay un error al obtener o parsear el valor JSON
+     */
     public async getRemoteJson<T = any>(key: string): Promise<T | null> {
         try {
             await fetchAndActivate(this.remoteConfig);

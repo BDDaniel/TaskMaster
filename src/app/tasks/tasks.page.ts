@@ -185,6 +185,7 @@ export class Tasks {
     if (this._search) {
       this.tasksFiltered = [...this._tasks.filter(item =>
         item.name.toLowerCase().includes(this._search.toLowerCase())
+        || item.category.toLowerCase().includes(this._search.toLowerCase())
       )];
     } else {
       this.tasksFiltered = [...this._tasks];
