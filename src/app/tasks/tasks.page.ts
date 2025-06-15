@@ -173,12 +173,18 @@ export class Tasks {
   }
 
   openTaskActionSheet(value: Task) {
-    this.isOpenActionSheet = true;
+    if (this.isOpenActionSheet) {
+      this.closeTaskActionSheet();
+      return;
+    }
     this.taskSelected = value;
+    this.isOpenActionSheet = true;
+    this.cdr.detectChanges();
   }
 
   closeTaskActionSheet() {
     this.isOpenActionSheet = false;
+    this.cdr.detectChanges();
   }
 
   private updateFiltered() {
@@ -274,17 +280,24 @@ export class Tasks {
       text: 'Editar',
       icon: 'create-outline',
       handler: () => {
-        this.loadForm();
+        this.closeTaskActionSheet();
+        setTimeout(() => {
+          this.loadForm();
+        }, 100);
       }
     },
     {
       text: 'Eliminar',
       icon: 'trash-outline',
       role: 'destructive',
-      handler: () => this.presentAlertDelete()
+      handler: () => {
+        this.closeTaskActionSheet();
+        setTimeout(() => {
+          this.presentAlertDelete();
+        }, 100);
+      }
     }
   ];
-
 
   public alertButtons = [{
     text: 'Cancelar',
@@ -300,8 +313,11 @@ export class Tasks {
         return false;
       }
 
-      this.tasks = [...this.tasks, data];
+      const newTasks = [...this.tasks, data];
+      this.tasks = newTasks;
+      this.tasksFiltered = [...newTasks];
       this.storageService.set('tasks', this.tasks);
+      this.cdr.detectChanges();
       return true;
     }
   }];
@@ -321,9 +337,13 @@ export class Tasks {
       }
 
       const index = this.tasks.indexOf(this.taskSelected);
-      this.tasks[index] = data;
-      this.tasks = [...this.tasks];
+      const newTasks = [...this.tasks];
+      newTasks[index] = data;
+      this.tasks = newTasks;
+      this.tasksFiltered = [...newTasks];
       this.storageService.set('tasks', this.tasks);
+      this.closeTaskActionSheet();
+      this.cdr.detectChanges();
       return true;
     }
   }];

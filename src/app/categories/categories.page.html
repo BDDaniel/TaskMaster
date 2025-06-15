@@ -46,7 +46,7 @@
   }
 
   <!-- Lista de categorías -->
-  @for (category of categoriesFiltered; track category) {
+  @for (category of categoriesFiltered; track category.replace(" ", "_")) {
   <ion-card class="card-container" (click)="openCategoryActionSheet(category)">
     <ion-card-header class="content-wrap">
       <ion-card-title>{{ category }}</ion-card-title>

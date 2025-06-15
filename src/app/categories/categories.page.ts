@@ -144,12 +144,18 @@ export class Categories implements OnInit, OnDestroy {
 
   // Action Sheet
   openCategoryActionSheet(category: string): void {
+    if (this.isOpenActionSheet) {
+      this.closeCategoryActionSheet();
+      return;
+    }
     this.categorySelected = category;
     this.isOpenActionSheet = true;
+    this.cdr.detectChanges();
   }
 
   closeCategoryActionSheet(): void {
     this.isOpenActionSheet = false;
+    this.cdr.detectChanges();
   }
 
   // Formularios
@@ -194,9 +200,13 @@ export class Categories implements OnInit, OnDestroy {
             }
 
             const index = this.categories.indexOf(this.categorySelected);
-            this.categories[index] = this.form.name;
-            this.categories = [...this.categories];
+            const newCategories = [...this.categories];
+            newCategories[index] = this.form.name;
+            this.categories = newCategories;
+            this.categoriesFiltered = [...newCategories];
             this.storageService.set('categories', this.categories);
+            this.closeCategoryActionSheet();
+            this.cdr.detectChanges();
             return true;
           }
         }
@@ -241,15 +251,23 @@ export class Categories implements OnInit, OnDestroy {
       text: 'Editar',
       icon: 'create-outline',
       handler: () => {
-        this.loadForm();
-        this.presentAlertEdit();
+        this.closeCategoryActionSheet();
+        setTimeout(() => {
+          this.loadForm();
+          this.presentAlertEdit();
+        }, 100);
       }
     },
     {
       text: 'Eliminar',
       icon: 'trash-outline',
       role: 'destructive',
-      handler: () => this.presentAlertDelete()
+      handler: () => {
+        this.closeCategoryActionSheet();
+        setTimeout(() => {
+          this.presentAlertDelete();
+        }, 100);
+      }
     }
   ];
 
@@ -264,8 +282,11 @@ export class Categories implements OnInit, OnDestroy {
           return false;
         }
 
-        this.categories = [...this.categories, this.form.name];
+        const newCategories = [...this.categories, this.form.name];
+        this.categories = newCategories;
+        this.categoriesFiltered = [...newCategories];
         this.storageService.set('categories', this.categories);
+        this.cdr.detectChanges();
         return true;
       }
     }
